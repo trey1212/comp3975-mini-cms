@@ -1,0 +1,36 @@
+version: "3.8"
+
+services:
+  db:
+    image: mariadb:10.7.3
+    container_name: maria
+    environment:
+      MYSQL_DATABASE: CMSDB
+      MYSQL_USER: cms_user
+      MYSQL_PASSWORD: db_password
+      MYSQL_ROOT_PASSWORD: secret
+    ports:
+      - "3333:3306"
+    volumes:
+      - db:/var/lib/mysql
+    restart: always
+
+  website:
+    container_name: cmsapp
+    build:
+      context: .
+    environment:
+      - MYSQL_DBHOST=db
+      - MYSQL_DBPORT=3306
+      - MYSQL_DBUSER=cms_user
+      - MYSQL_DBPASS=db_password
+      - MYSQL_DBNAME=CMSDB
+    ports:
+      - 8080:80
+      - 8083:443
+    depends_on:
+      - db
+
+volumes:
+  cmsapp:
+  db:
