@@ -12,7 +12,7 @@ $user = "
     );
 ";
 
-if ($conn->query($sql_users) === TRUE) {
+if ($conn->query($user) === TRUE) {
     echo "Table 'users' created.<br>";
 } else {
     die("Error creating users: " . $conn->error);
@@ -34,26 +34,36 @@ if ($check->num_rows == 0) {
 }
 
 //article table
-$article = "
-    CREATE TABLE IF NOT EXISTS articles (
+$create_article_table = "CREATE TABLE IF NOT EXISTS articles (
         id INT NOT NULL AUTO_INCREMENT,
-        title VARCHAR(40) NOT NULL,
+        title VARCHAR(100) NOT NULL,
         content TEXT NOT NULL,
         created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
         updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
         PRIMARY KEY (id)
-    );
+    )";
 
-    INSERT INTO articles
-        (title, content)
-    VALUES
-        ('Test Article 1', 'Does this work'),
-        ('Test Article 2', 'I hope it does'),
-        ('Test Article 3', 'Please work');
-";
-
-if ($conn->query($sql_articles) === TRUE) {
+// Run the CREATE first
+if ($conn->query($create_article_table) === TRUE) {
     echo "Table 'articles' created.<br>";
 } else {
-    die("Error creating articles: " . $conn->error);
+    die("Error creating articles table: " . $conn->error);
+}
+
+// Check if articles exist before inserting (to avoid duplicates every time you refresh)
+$check_articles = $conn->query("SELECT count(*) as count FROM articles");
+$row = $check_articles->fetch_assoc();
+
+if ($row['count'] == 0) {
+    $insert_articles = "INSERT INTO articles (title, content) VALUES
+        ('Test Article 1', 'Does this work'),
+        ('Test Article 2', 'I hope it does'),
+        ('Test Article 3', 'Please work')";
+
+    // Run the INSERT second
+    if ($conn->query($insert_articles) === TRUE) {
+        echo "Articles seeded.<br>";
+    } else {
+        die("Error seeding articles: " . $conn->error);
+    }
 }

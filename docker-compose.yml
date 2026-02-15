@@ -1,7 +1,7 @@
 version: "3.8"
 
 services:
-  db:
+  maria:
     image: mariadb:10.7.3
     container_name: maria
     environment:
@@ -20,7 +20,7 @@ services:
     build:
       context: .
     environment:
-      - MYSQL_DBHOST=db
+      - MYSQL_DBHOST=maria
       - MYSQL_DBPORT=3306
       - MYSQL_DBUSER=cms_user
       - MYSQL_DBPASS=db_password
@@ -29,7 +29,7 @@ services:
       - 8080:80
       - 8083:443
     depends_on:
-      - db
+      - maria
 
 volumes:
   cmsapp:

@@ -6,10 +6,20 @@ getenv('MYSQL_DBUSER') ? $db_user=getenv('MYSQL_DBUSER') : $db_user="root";
 getenv('MYSQL_DBPASS') ? $db_pass=getenv('MYSQL_DBPASS') : $db_pass="secret";
 getenv('MYSQL_DBNAME') ? $db_name=getenv('MYSQL_DBNAME') : $db_name="CMSDB";
 
-$conn = new mysqli($db_host, $db_user, $db_pass, $db_name, $db_port);
+$conn = new mysqli($db_host, $db_user, $db_pass, "", $db_port);
 
 // Check connection
 if ($conn->connect_error) {
 	die("Connection failed: " . $conn->connect_error);
 }
+
+// Create database if it doesn't exist
+$sql_db = "CREATE DATABASE IF NOT EXISTS $db_name";
+if ($conn->query($sql_db) === TRUE) {
+    $conn->select_db($db_name);
+} else {
+    die("Error creating database: " . $conn->error);
+}
+
 ?>
+
