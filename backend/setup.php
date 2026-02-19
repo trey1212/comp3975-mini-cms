@@ -43,14 +43,13 @@ $create_article_table = "CREATE TABLE IF NOT EXISTS articles (
         PRIMARY KEY (id)
     )";
 
-// Run the CREATE first
 if ($conn->query($create_article_table) === TRUE) {
     echo "Table 'articles' created.<br>";
 } else {
     die("Error creating articles table: " . $conn->error);
 }
 
-// Check if articles exist before inserting (to avoid duplicates every time you refresh)
+//Check if articles exist before inserting (to avoid duplicates every refresh)
 $check_articles = $conn->query("SELECT count(*) as count FROM articles");
 $row = $check_articles->fetch_assoc();
 
@@ -60,7 +59,6 @@ if ($row['count'] == 0) {
         ('Test Article 2', 'I hope it does'),
         ('Test Article 3', 'Please work')";
 
-    // Run the INSERT second
     if ($conn->query($insert_articles) === TRUE) {
         echo "Articles seeded.<br>";
     } else {
