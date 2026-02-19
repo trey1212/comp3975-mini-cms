@@ -13,3 +13,5 @@
 - Data Layer (Storage - MySQL)
   - Local File Database: MySQL database server running is Docker container that stores the persistent article data, including HTML/Markdown content and timestamps.
   - Seed the database with this author account: Username/Email Password -> a@a.a/P@$$w0rd
+
+**To start, go to .../backend/login.php**
